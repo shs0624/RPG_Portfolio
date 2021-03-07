@@ -273,4 +273,10 @@ public class Monster : LivingEntity
             ChangeState(State.Chase);
         }
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectDist);
+    }
 }
