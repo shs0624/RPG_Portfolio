@@ -40,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
         float targetSpeed = moveSpeed * padDistance * moveInput.magnitude;
         Vector3 moveDirection =
             Vector3.Normalize(MainCam.transform.forward * moveInput.y + MainCam.transform.right * moveInput.x);
+        moveDirection.y = 0f;//y좌표 고정 - 필요시 나중에 개선
 
         var velocity = moveDirection * targetSpeed + Vector3.up * currentVelocityY;
         // x,z평면 속도 계산 + y평면 속도 계산

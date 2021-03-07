@@ -67,30 +67,33 @@ public class MovingBlock : MonoBehaviour
 
     private IEnumerator Move()
     {
-        while(true)
+        yield return new WaitForSeconds(waitTime);
+
+        while (true)
         {
             while(true) // 목적지로 이동
             {
-                transform.Translate(getDirection(settingDir) * Speed);
-                MoveLandings(getDirection(settingDir) * Speed);
+                transform.Translate(getDirection(settingDir) * Speed * Time.deltaTime);
+                MoveLandings(getDirection(settingDir) * Speed * Time.deltaTime);
                 float dis = Vector3.Distance(transform.localPosition, secondPos);
 
-                if (dis <= 0.1f) break;
+                if (dis <= 0.05f) break;
 
-                yield return null;
+                //yield return null;
+                yield return new WaitForFixedUpdate();
             }
 
             yield return new WaitForSeconds(waitTime);
 
             while(true) // 원래장소로 이동
             {
-                transform.Translate(-getDirection(settingDir) * Speed);
-                MoveLandings(-getDirection(settingDir) * Speed);
+                transform.Translate(-getDirection(settingDir) * Speed * Time.deltaTime);
+                MoveLandings(-getDirection(settingDir) * Speed * Time.deltaTime);
                 float dis = Vector3.Distance(transform.localPosition, firstPos);
 
-                if (dis <= 0.1f) break;
+                if (dis <= 0.05f) break;
 
-                yield return null;
+                yield return new WaitForFixedUpdate();
             }
 
             yield return new WaitForSeconds(waitTime);

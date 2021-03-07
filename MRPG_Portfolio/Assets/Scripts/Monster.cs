@@ -89,7 +89,7 @@ public class Monster : LivingEntity
     {
         base.Die();
 
-        _animator.SetTrigger("dead");
+        _animator.SetTrigger("Die");
 
         Destroy(gameObject, 2f);
 
@@ -186,6 +186,11 @@ public class Monster : LivingEntity
         }
     }
 
+    private void LookAtTarget()
+    {
+        transform.LookAt(_target);
+    }
+
     private IEnumerator AttackCoroutine()
     {
         isAttacking = true;
@@ -207,7 +212,7 @@ public class Monster : LivingEntity
     {
         if(attackTimer > attackSpan && !isAttacking)
         {
-            Debug.Log("Attack");
+            LookAtTarget();
             StartCoroutine(AttackCoroutine());
         }
     }

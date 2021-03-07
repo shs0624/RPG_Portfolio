@@ -33,5 +33,9 @@ public class Projectile : MonoBehaviour
 
             ObjectPool.ReturnArrowObject(gameObject);
         }
+        if(other.CompareTag("Ground"))
+        {
+            ObjectPool.ReturnArrowObject(gameObject);
+        }
     }
 }
