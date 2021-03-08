@@ -30,7 +30,7 @@ public class Monster : LivingEntity
         Attacked,
         Return
     }
-    private State _state = State.Wait;
+    public State _state = State.Wait;
 
     private void Awake()
     {
@@ -94,6 +94,8 @@ public class Monster : LivingEntity
         Destroy(gameObject, 2f);
 
         _nav.enabled = false;
+
+        this.enabled = false;
     }
 
     public void ChangeState(State state)
@@ -110,6 +112,7 @@ public class Monster : LivingEntity
             case State.Wait:
                 {
                     _nav.enabled = false;
+                    _animator.SetBool("chasing", false);
                     break;
                 }
             case State.Chase:
@@ -213,7 +216,7 @@ public class Monster : LivingEntity
         if(attackTimer > attackSpan && !isAttacking)
         {
             LookAtTarget();
-            StartCoroutine(AttackCoroutine());
+            StartCoroutine(AttackCoroutine()); 
         }
     }
 
@@ -221,7 +224,7 @@ public class Monster : LivingEntity
     {
         _distance = Vector3.Distance(_target.position, transform.position);
         _ReturnDistance = Vector3.Distance(_startPos, transform.position);
-        _nav.SetDestination(_startPos);
+        //_nav.SetDestination(_startPos);
 
         if(_ReturnDistance < 0.1f)
         {
@@ -265,7 +268,6 @@ public class Monster : LivingEntity
 
     private void UpdateTarget()
     {
-        Debug.Log("UT");
         _distance = Vector3.Distance(_target.position, transform.position);
 
         if (_distance < detectDist)

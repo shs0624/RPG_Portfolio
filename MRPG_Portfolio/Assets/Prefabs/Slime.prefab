@@ -109,7 +109,7 @@ Transform:
   - {fileID: 1625479405953494130}
   m_Father: {fileID: 1626115183456160994}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 15.403157, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 15.403159, y: 0, z: 0}
 --- !u!1 &1622774897712265096
 GameObject:
   m_ObjectHideFlags: 0
@@ -9894,12 +9894,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1625347664616662500}
   - component: {fileID: 1716933336700332222}
+  - component: {fileID: 3102785179593051479}
   - component: {fileID: 1621686545313917854}
   - component: {fileID: 1621686545313917855}
   - component: {fileID: 1621686545313917852}
   m_Layer: 0
   m_Name: Slime
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9931,7 +9932,7 @@ Animator:
   m_GameObject: {fileID: 1623098951704196372}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 00fd31736571eff4eabbac76f3c5e9d3, type: 3}
-  m_Controller: {fileID: 9100000, guid: 7d3b6127e7ed37942b43f1a7838b4106, type: 2}
+  m_Controller: {fileID: 9100000, guid: d1cde461159855e4489377dfead9a744, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -9940,6 +9941,22 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!54 &3102785179593051479
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1623098951704196372}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
 --- !u!65 &1621686545313917854
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9991,7 +10008,7 @@ MonoBehaviour:
   _health: 0
   attackPower: 3
   moveSpeed: 2
-  detectDist: 5
+  detectDist: 7
   attackDist: 2
   attackSpan: 1
 --- !u!1 &1623295063962844490
@@ -10129,4 +10146,4 @@ Transform:
   - {fileID: 1625744370942900642}
   m_Father: {fileID: 1625911195632591448}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -12.855254, y: -3.3393605e-12, z: 5.9068444e-20}
+  m_LocalEulerAnglesHint: {x: -13.15365, y: -5.685689, z: -0.00000016439574}
