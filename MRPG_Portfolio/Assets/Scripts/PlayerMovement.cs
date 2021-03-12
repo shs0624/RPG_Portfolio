@@ -5,37 +5,37 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private GameObject MainCam;
-    [SerializeField] private float moveSpeed;
 
-    private Animator animator;
-    private CharacterController characterController;
     private float currentVelocityY;
+    private Animator _animator;
+    private CharacterController _characterController;
     private float padDistance;
 
+    public float moveSpeed;
     public Vector2 moveInput { get; set; }
     public float currentSpeed =>
-        new Vector2(characterController.velocity.x, characterController.velocity.z).magnitude;
+        new Vector2(_characterController.velocity.x, _characterController.velocity.z).magnitude;
 
     // Start is called before the first frame update
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
-        moveInput = Vector2.zero;
+        _characterController = GetComponent<CharacterController>();
+        _animator = GetComponent<Animator>();
     }
 
+    // Update is called once per frame
     void FixedUpdate()
     {
-        Move();
+        MoveUpdate();
         if (currentSpeed >= 0.1f) Look();
 
-        UpdateAnimator();
+        _animator.SetFloat("Speed", currentSpeed);
     }
 
-    public void Move()
+    private void MoveUpdate()
     {
         currentVelocityY += Time.deltaTime * Physics.gravity.y;
-        if (characterController.isGrounded) currentVelocityY = 0f;
+        if (_characterController.isGrounded) currentVelocityY = 0f;
 
         float targetSpeed = moveSpeed * padDistance * moveInput.magnitude;
         Vector3 moveDirection =
@@ -44,17 +44,16 @@ public class PlayerMovement : MonoBehaviour
 
         var velocity = moveDirection * targetSpeed + Vector3.up * currentVelocityY;
         // x,z평면 속도 계산 + y평면 속도 계산
-        characterController.Move(velocity * Time.deltaTime);
+
+        _characterController.Move(velocity * Time.deltaTime);
     }
 
-    public void Look()
+    private void Look()
     {
-        Vector3 targetDir = transform.position + new Vector3(moveInput.x, 0f, moveInput.y) * 100;
-
         Vector3 moveDirection =
             Vector3.Normalize(MainCam.transform.forward * moveInput.y + MainCam.transform.right * moveInput.x);
 
-        moveDirection.y = 0;
+        moveDirection.y = 0f;
 
         transform.LookAt(transform.position + moveDirection);
     }
@@ -63,10 +62,5 @@ public class PlayerMovement : MonoBehaviour
     {
         moveInput = move;
         padDistance = distance;
-    }
-
-    private void UpdateAnimator()
-    {
-        animator.SetFloat("Speed", currentSpeed);
     }
 }
