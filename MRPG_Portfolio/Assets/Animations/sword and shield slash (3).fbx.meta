@@ -67,6 +67,22 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.43577984
+        functionName: TrailOn
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: a0a35b1af95cbe949bd6e2da23642448,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.67431194
+        functionName: TrailOff
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: a0a35b1af95cbe949bd6e2da23642448,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

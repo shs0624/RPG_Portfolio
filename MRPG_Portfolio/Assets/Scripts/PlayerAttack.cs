@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
+    public TrailRenderer swordTrail;
+
     private Animator _animator;
     private int comboCnt = 0;
     private bool comboPossible = false;
@@ -36,7 +38,18 @@ public class PlayerAttack : MonoBehaviour
         if(comboCnt == 2)
         {
             _animator.SetTrigger("Combo");
+            TrailOff();
         }
+    }
+
+    public void TrailOn()
+    {
+        swordTrail.enabled = true;
+    }
+
+    public void TrailOff()
+    {
+        swordTrail.enabled = false;
     }
 
     public void ComboPossible()
