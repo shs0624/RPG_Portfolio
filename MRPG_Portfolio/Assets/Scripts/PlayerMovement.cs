@@ -12,7 +12,9 @@ public class PlayerMovement : MonoBehaviour
     private float padDistance;
 
     public float moveSpeed;
+    [HideInInspector]
     public Vector2 moveInput { get; set; }
+    [HideInInspector]
     public float currentSpeed =>
         new Vector2(_characterController.velocity.x, _characterController.velocity.z).magnitude;
 
