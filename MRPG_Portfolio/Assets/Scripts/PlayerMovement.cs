@@ -13,6 +13,8 @@ public class PlayerMovement : MonoBehaviour
 
     public float moveSpeed;
     [HideInInspector]
+    public bool canMove = true;
+    [HideInInspector]
     public Vector2 moveInput { get; set; }
     [HideInInspector]
     public float currentSpeed =>
@@ -28,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        MoveUpdate();
+        if(canMove)MoveUpdate();
         if (currentSpeed >= 0.1f) Look();
 
         _animator.SetFloat("Speed", currentSpeed);
