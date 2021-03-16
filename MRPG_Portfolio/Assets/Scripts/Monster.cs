@@ -10,8 +10,9 @@ public class Monster : LivingEntity
     public float detectDist;
     public float attackDist;
     public float attackSpan;
+    public float attackSpeed;
 
-    private bool isAttack = false;
+    private bool isAttacking = false;
     private float attackTimer = 0f;
     private float _distance;
     private Vector3 _startPos;
@@ -19,7 +20,7 @@ public class Monster : LivingEntity
     private Animator _animator;
     private NavMeshAgent _nav;
 
-    private State _state;
+    public State _state;
     public enum State
     {
         Waiting,
@@ -29,7 +30,6 @@ public class Monster : LivingEntity
         Returning
     }
 
-    // Start is called before the first frame update
     void Awake()
     {
         _animator = GetComponent<Animator>();
@@ -40,7 +40,6 @@ public class Monster : LivingEntity
         _target = GameObject.Find("Player").transform;
     }
 
-    // Update is called once per frame
     void Update()
     {
         attackTimer += Time.deltaTime;
@@ -52,13 +51,98 @@ public class Monster : LivingEntity
                 UpdateTarget();
                 break;
             case State.Chasing:
+                Chase();
+                break;
+            case State.Attacking:
+                Attack();
+                break;
+            case State.AfterAttack:
+                break;
+            case State.Returning:
+                Return();
+                break;
+        }
+    }
+
+    private void EnterState(State st)
+    {
+        switch (st)
+        {
+            case State.Waiting:
+                _nav.isStopped = true;
+                //_nav.enabled = false;
+                _animator.SetBool("isMoving", false);
+                break;
+            case State.Chasing:
+                _nav.isStopped = false;
+                //_nav.enabled = true;
+                _animator.SetBool("isMoving", true);
+                break;
+            case State.Attacking:
+                _nav.isStopped = true;
+                //_nav.enabled = false;
+                break;
+            case State.AfterAttack:
+                _nav.isStopped = false;
+                //_nav.enabled = true;
+                break;
+            case State.Returning:
+                _nav.isStopped = false;
+                //_nav.enabled = true;
+                _animator.SetBool("isMoving", true);
+                break;
+        }
+    }
+
+    private void ExitState(State st)
+    {
+        switch (st)
+        {
+            case State.Waiting:
+                break;
+            case State.Chasing:
+                _animator.SetBool("isMoving", false);
                 break;
             case State.Attacking:
                 break;
             case State.AfterAttack:
                 break;
             case State.Returning:
+                _animator.SetBool("isMoving", false);
                 break;
+        }
+    }
+
+    private void ChangeState(State st)
+    {
+        ExitState(st);
+        _state = st;
+        EnterState(st);
+    }
+
+    IEnumerator AttackCoroutine()
+    {
+        isAttacking = true;
+
+        _animator.SetTrigger("Attack");
+
+        yield return new WaitForSeconds(attackSpeed);
+
+        attackTimer = 0f;
+
+        isAttacking = false;
+
+        _distance = Vector3.Distance(_target.position, transform.position);
+        
+        ChangeState(State.Chasing);
+    }
+
+    private void Attack()
+    {
+        if(attackTimer > attackSpan && !isAttacking)
+        {
+            Debug.Log("Attack");
+            StartCoroutine(AttackCoroutine());
         }
     }
 
@@ -69,11 +153,28 @@ public class Monster : LivingEntity
 
         if(_distance < attackDist)
         {
-            //공격상태로 변경
+            if (attackTimer < attackSpan) ChangeState(State.Waiting);
+            else ChangeState(State.Attacking);
         }
         if(_distance > detectDist)
         {
-            //리턴상태로 변경
+            ChangeState(State.Returning);
+        }
+    }
+
+    private void Return()
+    {
+        _distance = Vector3.Distance(_target.position, transform.position);
+        float _returnDist = Vector3.Distance(_startPos, transform.position);
+        _nav.SetDestination(_startPos);
+
+        if(_returnDist < 0.1f)
+        {
+            ChangeState(State.Waiting);
+        }
+        if(_distance < detectDist)
+        {
+            ChangeState(State.Chasing);
         }
     }
 
@@ -83,7 +184,8 @@ public class Monster : LivingEntity
 
         if(_distance < detectDist)
         {
-            //추격상태로 변경.
+            if (_distance < attackDist && attackTimer < attackSpan) ChangeState(State.Waiting);
+            else ChangeState(State.Chasing);
         }
     }
 }

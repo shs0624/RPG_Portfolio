@@ -20,9 +20,7 @@ public class PlayerAttack : MonoBehaviour
         _playerMov = GetComponent<PlayerMovement>();
     }
 
-    // 1. 공격중일땐 이동을 못하게 하는 코드 추가하기
-    // 2. 공격할때 실제로 적 콜라이더를 얻어오는 코드 추가하기.
-
+    // 1. 공격할때 실제로 적 콜라이더를 얻어오는 코드 추가하기.
     
     IEnumerator AttackCoroutine()
     {
