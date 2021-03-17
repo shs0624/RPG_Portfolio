@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
+    public float attackDamage;
     public TrailRenderer swordTrail;
-    public BoxCollider attackCollider;
+    public Vector3 boxSize = new Vector3(5, 5, 5);
+    public Transform attackCol;
 
     private PlayerMovement _playerMov;
     private Animator _animator;
@@ -27,7 +29,8 @@ public class PlayerAttack : MonoBehaviour
         isAttacking = true;
 
         yield return new WaitForSeconds(0.35f);
-        Debug.Log("Attack!");
+
+        AttackEvent();
 
         while(_animator.GetCurrentAnimatorStateInfo(0).IsName("Player_Attack"))
         {
@@ -52,8 +55,8 @@ public class PlayerAttack : MonoBehaviour
         _playerMov.canMove = false;
 
         yield return new WaitForSeconds(0.7f);
+        AttackEvent();
         Debug.Log("ComboAttack!");
-
 
         yield return new WaitForSeconds(0.5f);
         //후 딜레이
@@ -61,6 +64,19 @@ public class PlayerAttack : MonoBehaviour
         isAttacking = false;
         comboPossible = false;
         _playerMov.canMove = true;
+    }
+
+    private void AttackEvent()
+    {
+        Collider[] colls = Physics.OverlapBox
+            (attackCol.transform.position, boxSize, attackCol.transform.rotation, LayerMask.GetMask("Monster"));
+
+        foreach (Collider coll in colls)
+        {
+            LivingEntity living = coll.GetComponent<LivingEntity>();
+            living.OnDamage(attackDamage);
+        }
+        Debug.Log(colls.Length);
     }
 
     public void Attack()
@@ -78,12 +94,6 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    public void EnemyDetect()
-    {
-        attackCollider.enabled = true;
-
-    }
-
     public void TrailOn()
     {
         swordTrail.enabled = true;
@@ -92,5 +102,11 @@ public class PlayerAttack : MonoBehaviour
     public void TrailOff()
     {
         swordTrail.enabled = false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(attackCol.transform.position, boxSize);
     }
 }

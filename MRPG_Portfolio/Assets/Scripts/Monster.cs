@@ -11,6 +11,8 @@ public class Monster : LivingEntity
     public float attackDist;
     public float attackSpan;
     public float attackSpeed;
+    public Vector3 boxSize = new Vector3(2, 2, 2);
+    public Transform attackCol;
 
     private bool isAttacking = false;
     private float attackTimer = 0f;
@@ -36,6 +38,7 @@ public class Monster : LivingEntity
         _nav = GetComponent<NavMeshAgent>();
         _startPos = transform.position;
         _nav.speed = moveSpeed;
+        Setup();
 
         _target = GameObject.Find("Player").transform;
     }
@@ -120,6 +123,25 @@ public class Monster : LivingEntity
         EnterState(st);
     }
 
+    protected override void Die()
+    {
+        base.Die();
+        _animator.SetTrigger("Die");
+        this.GetComponent<CapsuleCollider>().isTrigger = true;
+        Destroy(gameObject, 5f);
+    }
+
+    private void AttackEvent()
+    {
+        _distance = Vector3.Distance(_target.position, transform.position);
+
+        if(_distance <= attackDist)
+        {
+            LivingEntity living = _target.GetComponent<LivingEntity>();
+            living.OnDamage(attackDamage);
+        }
+    }
+
     IEnumerator AttackCoroutine()
     {
         isAttacking = true;
@@ -127,6 +149,8 @@ public class Monster : LivingEntity
         _animator.SetTrigger("Attack");
 
         yield return new WaitForSeconds(attackSpeed);
+
+        AttackEvent();
 
         attackTimer = 0f;
 
@@ -141,7 +165,6 @@ public class Monster : LivingEntity
     {
         if(attackTimer > attackSpan && !isAttacking)
         {
-            Debug.Log("Attack");
             StartCoroutine(AttackCoroutine());
         }
     }
@@ -188,4 +211,13 @@ public class Monster : LivingEntity
             else ChangeState(State.Chasing);
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(attackCol.transform.position, boxSize);
+    }
 }
+
+
+

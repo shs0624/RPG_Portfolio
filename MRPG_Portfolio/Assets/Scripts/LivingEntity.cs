@@ -5,14 +5,13 @@ using UnityEngine;
 
 public class LivingEntity : MonoBehaviour
 {
-    public float startingHealth = 10f;
+    public float startingHealth;
 
     protected bool isDead;
-    protected float _health;
+    [SerializeField]protected float _health;
     public event Action onDeath;
 
-    // Start is called before the first frame update
-    void Start()
+    protected void Setup()
     {
         isDead = false;
         _health = startingHealth;
@@ -21,6 +20,7 @@ public class LivingEntity : MonoBehaviour
     public virtual void OnDamage(float damage)
     {
         _health -= damage;
+        Debug.Log(this.gameObject + " / Get Damaged!");
 
         if(_health <= 0)
         {
