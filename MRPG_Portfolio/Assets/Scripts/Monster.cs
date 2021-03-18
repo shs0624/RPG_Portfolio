@@ -123,6 +123,15 @@ public class Monster : LivingEntity
         EnterState(st);
     }
 
+    public override void OnDamage(float damage)
+    {
+        base.OnDamage(damage);
+        GameObject g = ObjectPool.instance.CallObj("MonsterDamage");
+
+        g.transform.position = transform.position + Vector3.up;
+        g.GetComponent<DamageText>().SetText(damage);
+    }
+
     protected override void Die()
     {
         base.Die();

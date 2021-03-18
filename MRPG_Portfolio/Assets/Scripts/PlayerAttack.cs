@@ -73,7 +73,7 @@ public class PlayerAttack : MonoBehaviour
 
         foreach (Collider coll in colls)
         {
-            LivingEntity living = coll.GetComponent<LivingEntity>();
+            Monster living = coll.GetComponent<Monster>();
             living.OnDamage(attackDamage);
         }
         Debug.Log(colls.Length);
