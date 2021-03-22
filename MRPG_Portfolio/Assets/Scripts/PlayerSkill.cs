@@ -10,6 +10,7 @@ public class PlayerSkill : MonoBehaviour
     public List<Skill> skillList;
     public Vector3 boxSize = new Vector3(5, 5, 5);
     public Transform chainRange;
+    public Vector3 Lightningoffset;
 
     private int count = 0;
     private List<Monster> targetList = new List<Monster>();
@@ -46,7 +47,15 @@ public class PlayerSkill : MonoBehaviour
 
     private void MakeLightning()
     {
+        // 처음엔 플레이어와 리스트 첫번째를 연결.
+        GameObject chain = ObjectPool.instance.CallObj("ChainLightning");
+        chain.GetComponent<ChainLightning>().PosSetting(transform.position + Lightningoffset, targetList[0].transform.position + Lightningoffset);
 
+        for(int i = 1; i < count; i++)
+        {
+            chain = ObjectPool.instance.CallObj("ChainLightning");
+            chain.GetComponent<ChainLightning>().PosSetting(targetList[i - 1].transform.position + Lightningoffset, targetList[i].transform.position + Lightningoffset);
+        }
     }
 
     private void SetTargetList()

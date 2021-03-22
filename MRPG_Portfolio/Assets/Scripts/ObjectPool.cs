@@ -7,10 +7,13 @@ public class ObjectPool : MonoBehaviour
     public static ObjectPool instance;
     public GameObject MobDamageText;
     public GameObject PlayerDamageText;
+    public GameObject chainLightningPrefab;
     public Transform DamageParent;
+    public Transform SkillParent;
 
     GameObject[] MobDamageArr = new GameObject[100];
     GameObject[] PlayerDamageArr = new GameObject[100];
+    GameObject[] ChainLightningArr = new GameObject[50];
 
     GameObject[] target;
 
@@ -39,6 +42,13 @@ public class ObjectPool : MonoBehaviour
             PlayerDamageArr[i].transform.parent = DamageParent;
             PlayerDamageArr[i].SetActive(false);
         }
+
+        for (int i = 0; i < 50; i++)
+        {
+            ChainLightningArr[i] = Instantiate(chainLightningPrefab);
+            ChainLightningArr[i].transform.parent = SkillParent;
+            ChainLightningArr[i].SetActive(false);
+        }
     }
 
     public GameObject CallObj(string name)
@@ -50,6 +60,9 @@ public class ObjectPool : MonoBehaviour
                 break;
             case "PlayerDamage":
                 target = PlayerDamageArr;
+                break;
+            case "ChainLightning":
+                target = ChainLightningArr;
                 break;
         }
 
