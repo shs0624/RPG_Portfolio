@@ -50,8 +50,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b3fa1459de80bc44a9b3e01397db8235, type: 2}
-  - {fileID: 2100000, guid: b3fa1459de80bc44a9b3e01397db8235, type: 2}
+  - {fileID: 2100000, guid: 4de36ea0be987c54d965ef5ee0f7b3bc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -129,7 +128,7 @@ LineRenderer:
     shadowBias: 0.5
     generateLightingData: 0
   m_UseWorldSpace: 1
-  m_Loop: 1
+  m_Loop: 0
 --- !u!114 &5889721504923660682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,3 +141,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 779812b84de1b614b95a67da3ed7f321, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  effectTime: 1

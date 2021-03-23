@@ -9,8 +9,11 @@ public class Skill : ScriptableObject
     private string skillName;
     [SerializeField]
     private float damage;
+    [SerializeField]
+    private float coolTime;
     
 
     public string SkillName { get { return skillName; } }
     public float Damage { get { return damage; } }
+    public float CoolTime { get { return coolTime; } }
 }

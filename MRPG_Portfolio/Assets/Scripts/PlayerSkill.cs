@@ -7,14 +7,17 @@ public class PlayerSkill : MonoBehaviour
 {
     public int chainLimit = 3;
     public float chainRadius = 4f;
-    public List<Skill> skillList;
+    public Skill[] skillSlots = new Skill[3];
+    public List<Skill> skillList = new List<Skill>();
     public Vector3 boxSize = new Vector3(5, 5, 5);
     public Transform chainRange;
     public Vector3 Lightningoffset;
 
     private int count = 0;
+    private float[] coolTimes;
     private List<Monster> targetList = new List<Monster>();
     private Dictionary<Monster, float> targetDictionary = new Dictionary<Monster, float>();
+    private Dictionary<Skill, int> skillDictionary = new Dictionary<Skill, int>(); //스킬리스트에 저장된 idx를 포함한 딕셔너리
     private PlayerMovement _playerMov;
     private Animator _animator;
 
@@ -23,10 +26,44 @@ public class PlayerSkill : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _playerMov = GetComponent<PlayerMovement>();
+        coolTimes = new float[skillList.Count];
+        for(int i = 0; i < skillList.Count; i++)
+        {
+            coolTimes[i] = skillList[i].CoolTime;
+            skillDictionary.Add(skillList[i], i);
+        }
     }
 
+    private void Update()
+    {
+        for (int i = 0; i < skillList.Count; i++)
+        {
+            if (coolTimes[i] > 0)
+            {
+                coolTimes[i] -= Time.deltaTime;
+                if (coolTimes[i] <= 0) coolTimes[i] = 0;
+            }
+        }
+    }
 
-    public void ChainLightning()
+    public void SpellSkill(int idx)
+    {
+        if(skillSlots[idx] != null)
+        {
+            int n = skillDictionary[skillSlots[idx]];
+            switch(skillSlots[idx].SkillName)
+            {
+                case "ChainLightning":
+                    if(CheckCool(n))
+                        ChainLightning(n);
+                    break;
+                case "WheelWind":
+                    break;
+            }
+        }
+    }
+
+    public void ChainLightning(int idx)
     {
         SetTargetList();
         // 1. 타겟들을 체크해서 리스트에 넣기.
@@ -35,13 +72,23 @@ public class PlayerSkill : MonoBehaviour
         // 2. 타겟이하나라도 존재하면, 스킬이 사용되고 해당 위치에 프리팹 생성
         // 3. 손에서 프리팹까지 연결.(라인 렌더러)
 
-        Initalization();
+        LCInitalization(idx);
     }
 
-    private void Initalization()
+    private bool CheckCool(int idx)
+    {
+        if (coolTimes[skillDictionary[skillList[idx]]] <= 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void LCInitalization(int idx)
     {
         targetDictionary.Clear();
         targetList.Clear();
+        coolTimes[idx] = skillList[idx].CoolTime;
         count = 0;
     }
 
@@ -80,7 +127,6 @@ public class PlayerSkill : MonoBehaviour
 
         targetList.Add(mobList[0]); count++;
 
-        Debug.Log("1번 타겟 : " + mobList[0]);
         // 타겟의 근처 적을 탐색해, 그 주변 적에게 사슬을 연결
         ChainEnemies(mobList[0]);
     }
@@ -115,7 +161,6 @@ public class PlayerSkill : MonoBehaviour
                     return 0;
                 });
 
-                Debug.Log((count + 1) + "번 타겟 : " + mobList[0]);
                 targetList.Add(mobList[0]);
                 count++;
 
