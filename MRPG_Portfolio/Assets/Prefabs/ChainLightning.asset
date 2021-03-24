@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ChainLightning
   m_EditorClassIdentifier: 
   skillName: ChainLightning
-  damage: 15
-  coolTime: 6
+  damage: 3
+  coolTime: 3

@@ -10,14 +10,21 @@ public class DamageText : MonoBehaviour
     public float destroyTime;
 
     Text text;
+    Color firstColor;
     Color alpha;
     
     // Start is called before the first frame update
     void Awake()
     {
         text = GetComponent<Text>();
+        firstColor = text.color;
         alpha = text.color;
-        Invoke("OffObj", destroyTime);
+    }
+
+    private void OnEnable()
+    {
+        alpha = firstColor;
+        StartCoroutine(FadeOutCoroutine());
     }
 
     public void SetText(float damage)
@@ -25,18 +32,27 @@ public class DamageText : MonoBehaviour
         text.text = damage.ToString();
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator FadeOutCoroutine()
     {
-        transform.Translate(new Vector3(0, floatingSpeed * Time.deltaTime, 0));
+        float Timer = destroyTime;
+        while(Timer > 0)
+        {
+            Timer -= Time.deltaTime;
 
-        alpha.a = Mathf.Lerp(alpha.a, 0, Time.deltaTime * alphaSpeed);
-        text.color = alpha;
+            transform.Translate(new Vector3(0, floatingSpeed * Time.deltaTime, 0));
+            alpha.a -= Time.deltaTime * alphaSpeed;
+            text.color = alpha;
+
+            yield return null;
+        }
+        OffObj();
+        yield return null;
     }
 
     private void OffObj()
     {
         alpha.a = 255f;
+        StopAllCoroutines();
         gameObject.SetActive(false);
     }
 }

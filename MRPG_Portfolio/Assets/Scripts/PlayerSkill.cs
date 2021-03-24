@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerSkill : MonoBehaviour
 {
     public int chainLimit = 3;
     public float chainRadius = 4f;
-    public Skill[] skillSlots = new Skill[3];
-    public List<Skill> skillList = new List<Skill>();
+    public Skill[] skillSlots = new Skill[3]; // 스킬 슬롯에 저장된 스킬들 리스트
+    public List<Skill> skillList = new List<Skill>(); // 전체 스킬들 리스트
+    public List<CoolTimePanel> coolTimePanelList = new List<CoolTimePanel>();
     public Vector3 boxSize = new Vector3(5, 5, 5);
     public Transform chainRange;
     public Vector3 Lightningoffset;
@@ -27,9 +29,15 @@ public class PlayerSkill : MonoBehaviour
         _animator = GetComponent<Animator>();
         _playerMov = GetComponent<PlayerMovement>();
         coolTimes = new float[skillList.Count];
+
+        for(int i = 0; i < coolTimePanelList.Count; i++)
+        {
+            coolTimePanelList[i].timeSetting(0f);
+        }
+
         for(int i = 0; i < skillList.Count; i++)
         {
-            coolTimes[i] = skillList[i].CoolTime;
+            coolTimes[i] = 0f;//skillList[i].CoolTime;
             skillDictionary.Add(skillList[i], i);
         }
     }
@@ -51,11 +59,15 @@ public class PlayerSkill : MonoBehaviour
         if(skillSlots[idx] != null)
         {
             int n = skillDictionary[skillSlots[idx]];
+            //n = 스킬리스트에서의 내가 시전한 스킬의 인덱스
             switch(skillSlots[idx].SkillName)
             {
                 case "ChainLightning":
-                    if(CheckCool(n))
+                    if (CheckCool(n))
+                    {
                         ChainLightning(n);
+                        SetCoolTimePanels(n);
+                    }
                     break;
                 case "WheelWind":
                     break;
@@ -63,6 +75,7 @@ public class PlayerSkill : MonoBehaviour
         }
     }
 
+    //idx = skillList에서 체인 라이트닝의 인덱스
     public void ChainLightning(int idx)
     {
         SetTargetList();
@@ -71,8 +84,21 @@ public class PlayerSkill : MonoBehaviour
         MakeLightning();
         // 2. 타겟이하나라도 존재하면, 스킬이 사용되고 해당 위치에 프리팹 생성
         // 3. 손에서 프리팹까지 연결.(라인 렌더러)
+        GiveDamage(idx);
 
         LCInitalization(idx);
+    }
+
+    // 스킬의 번호를 받아서, 각 패널에 스킬들의 쿨타임을 적용시키는 함수
+    private void SetCoolTimePanels(int skillnum)
+    {
+        for(int i = 0; i < skillSlots.Length; i++)
+        {
+            if(skillSlots[i] == skillList[skillnum])
+            {
+                coolTimePanelList[i].timeSetting(skillList[skillnum].CoolTime);
+            }
+        }
     }
 
     private bool CheckCool(int idx)
@@ -90,6 +116,15 @@ public class PlayerSkill : MonoBehaviour
         targetList.Clear();
         coolTimes[idx] = skillList[idx].CoolTime;
         count = 0;
+    }
+
+    // idx = 사용하는 스킬의 skillList에서의 인덱스
+    private void GiveDamage(int idx)
+    {
+        for(int i = 0; i < targetList.Count; i++)
+        {
+            targetList[i].OnDamage(skillList[idx].Damage);
+        }
     }
 
     private void MakeLightning()
