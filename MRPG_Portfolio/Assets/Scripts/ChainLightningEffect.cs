@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChainLightning : MonoBehaviour
+public class ChainLightningEffect : MonoBehaviour
 {
     public float effectTime;
 
@@ -18,7 +18,6 @@ public class ChainLightning : MonoBehaviour
     private void OnEnable()
     {
         Timer = 0f;
-        Invoke("OffEffect", effectTime);
         StartCoroutine(EffectCoroutine());
     }
 
@@ -45,13 +44,13 @@ public class ChainLightning : MonoBehaviour
             Timer += 0.1f;
         }
 
+        OffEffect();
         yield return null;
     }
 
     private void OffEffect()
     {
         Timer = 0f;
-        StopAllCoroutines();
         gameObject.SetActive(false);
     }
 }

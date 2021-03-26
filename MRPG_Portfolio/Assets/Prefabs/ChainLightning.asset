@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 862c157322b0ee449b2a909030e37dfe, type: 3}
   m_Name: ChainLightning
   m_EditorClassIdentifier: 
+  skillImage: {fileID: 21300000, guid: 39658835b35c67c41b2032d578fe12c1, type: 3}
   skillName: ChainLightning
   damage: 3
   coolTime: 3
