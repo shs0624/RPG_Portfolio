@@ -21,8 +21,6 @@ public class PlayerAttack : MonoBehaviour
         _animator = GetComponent<Animator>();
         _playerMov = GetComponent<PlayerMovement>();
     }
-
-    // 1. 공격할때 실제로 적 콜라이더를 얻어오는 코드 추가하기.
     
     IEnumerator AttackCoroutine()
     {
@@ -76,7 +74,6 @@ public class PlayerAttack : MonoBehaviour
             Monster living = coll.GetComponent<Monster>();
             living.OnDamage(attackDamage);
         }
-        Debug.Log(colls.Length);
     }
 
     public void Attack()
@@ -101,9 +98,12 @@ public class PlayerAttack : MonoBehaviour
 
     public void TrailOff()
     {
-        swordTrail.enabled = false;
+        if(swordTrail.enabled)
+        {
+            swordTrail.enabled = false;
+        }
     }
-
+    
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

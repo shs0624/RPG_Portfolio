@@ -3356,6 +3356,12 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &84851663 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 84851663, guid: faa647a65cffbcc4586e4c67a401fea2,
+    type: 3}
+  m_PrefabInstance: {fileID: 970225878}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &86854289
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29623,11 +29629,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 8451610965501417863, guid: faa647a65cffbcc4586e4c67a401fea2,
-        type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
     - target: {fileID: 8457430535831595681, guid: faa647a65cffbcc4586e4c67a401fea2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -29683,28 +29684,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8848617068482950621, guid: faa647a65cffbcc4586e4c67a401fea2,
-        type: 3}
-      propertyPath: coolTimePanelList.Array.data[0]
-      value: 
-      objectReference: {fileID: 138497523}
-    - target: {fileID: 8848617068482950621, guid: faa647a65cffbcc4586e4c67a401fea2,
-        type: 3}
-      propertyPath: coolTimePanelList.Array.data[1]
-      value: 
-      objectReference: {fileID: 1284665604}
-    - target: {fileID: 8848617068482950621, guid: faa647a65cffbcc4586e4c67a401fea2,
-        type: 3}
-      propertyPath: coolTimePanelList.Array.data[2]
-      value: 
-      objectReference: {fileID: 1501168512}
-    - target: {fileID: 8848617068482950621, guid: faa647a65cffbcc4586e4c67a401fea2,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 8848617068482950621, guid: faa647a65cffbcc4586e4c67a401fea2, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: faa647a65cffbcc4586e4c67a401fea2, type: 3}
 --- !u!1 &970225879 stripped
 GameObject:
@@ -37985,6 +37965,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 11418127}
+  - {fileID: 1392493999}
   m_Father: {fileID: 0}
   m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -38002,12 +37983,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillControllers:
   - {fileID: 11418128}
+  - {fileID: 1392494000}
   firstSkillList:
   - {fileID: 11400000, guid: e2eb192c1cf9e8c4998cb1ddcc23049d, type: 2}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 024ff0cfac45514439127be708c0750a, type: 2}
   - {fileID: 11400000, guid: e2eb192c1cf9e8c4998cb1ddcc23049d, type: 2}
   skillList:
   - {fileID: 11400000, guid: e2eb192c1cf9e8c4998cb1ddcc23049d, type: 2}
+  - {fileID: 11400000, guid: 024ff0cfac45514439127be708c0750a, type: 2}
   slotList:
   - {fileID: 1431956658}
   - {fileID: 878377512}
@@ -42687,6 +42670,55 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1390087837}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1392493998
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1392493999}
+  - component: {fileID: 1392494000}
+  m_Layer: 0
+  m_Name: WheelWindManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1392493999
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1392493998}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1221194195}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1392494000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1392493998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f282d10d557263049b0fe6644f832599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skill: {fileID: 11400000, guid: 024ff0cfac45514439127be708c0750a, type: 2}
+  rangeRadius: 3
+  damagePerTick: 3
+  spinTime: 3
+  tickTime: 0.6
+  lineRenderer: {fileID: 84851663}
 --- !u!1001 &1393986533
 PrefabInstance:
   m_ObjectHideFlags: 0
