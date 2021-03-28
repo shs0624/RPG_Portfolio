@@ -15,6 +15,7 @@ public class Monster : LivingEntity
     public Transform attackCol;
 
     private bool isAttacking = false;
+    public bool isImpacted = false;
     private float attackTimer = 0f;
     private float _distance;
     private Vector3 _startPos;
@@ -28,7 +29,7 @@ public class Monster : LivingEntity
         Waiting,
         Chasing,
         Attacking,
-        AfterAttack,
+        Impacted,
         Returning
     }
 
@@ -46,7 +47,8 @@ public class Monster : LivingEntity
     void Update()
     {
         attackTimer += Time.deltaTime;
-        if (isDead) return;
+
+        if (isDead || isImpacted) return;
 
         switch(_state)
         {
@@ -59,7 +61,7 @@ public class Monster : LivingEntity
             case State.Attacking:
                 Attack();
                 break;
-            case State.AfterAttack:
+            case State.Impacted:
                 break;
             case State.Returning:
                 Return();
@@ -73,25 +75,21 @@ public class Monster : LivingEntity
         {
             case State.Waiting:
                 _nav.isStopped = true;
-                //_nav.enabled = false;
                 _animator.SetBool("isMoving", false);
                 break;
             case State.Chasing:
                 _nav.isStopped = false;
-                //_nav.enabled = true;
                 _animator.SetBool("isMoving", true);
                 break;
             case State.Attacking:
                 _nav.isStopped = true;
-                //_nav.enabled = false;
                 break;
-            case State.AfterAttack:
-                _nav.isStopped = false;
-                //_nav.enabled = true;
+            case State.Impacted:
+                _nav.isStopped = true;
+                _animator.SetBool("isMoving", false);
                 break;
             case State.Returning:
                 _nav.isStopped = false;
-                //_nav.enabled = true;
                 _animator.SetBool("isMoving", true);
                 break;
         }
@@ -107,8 +105,10 @@ public class Monster : LivingEntity
                 _animator.SetBool("isMoving", false);
                 break;
             case State.Attacking:
+                _nav.isStopped = false;
                 break;
-            case State.AfterAttack:
+            case State.Impacted:
+                _nav.isStopped = false;
                 break;
             case State.Returning:
                 _animator.SetBool("isMoving", false);
@@ -118,26 +118,37 @@ public class Monster : LivingEntity
 
     private void ChangeState(State st)
     {
-        ExitState(st);
+        ExitState(_state);
         _state = st;
-        EnterState(st);
+        EnterState(_state);
     }
 
     public override void OnDamage(float damage)
     {
-        base.OnDamage(damage);
-        GameObject g = ObjectPool.instance.CallObj("MonsterDamage");
+        if (!isDead)
+        {
+            base.OnDamage(damage);
+            GameObject g = ObjectPool.instance.CallObj("MonsterDamage");
+            g.transform.position = transform.position + Vector3.up;
+            g.GetComponent<DamageText>().SetText(damage);
 
-        g.transform.position = transform.position + Vector3.up;
-        g.GetComponent<DamageText>().SetText(damage);
+            if (isDead) return;
+            if (!isImpacted)
+            {
+                StopAllCoroutines();
+                isAttacking = false;
+                StartCoroutine(ImpactCoroutine());
+            }
+        }
     }
 
     protected override void Die()
     {
         base.Die();
         _animator.SetTrigger("Die");
-        this.GetComponent<CapsuleCollider>().isTrigger = true;
+        this.GetComponent<CapsuleCollider>().enabled = false;
         Destroy(gameObject, 5f);
+        this.enabled = false;
     }
 
     private void AttackEvent()
@@ -149,6 +160,21 @@ public class Monster : LivingEntity
             LivingEntity living = _target.GetComponent<LivingEntity>();
             living.OnDamage(attackDamage);
         }
+    }
+
+    IEnumerator ImpactCoroutine()
+    {
+        isImpacted = true;
+
+        _animator.SetTrigger("Impact");
+
+        ChangeState(State.Impacted);
+
+        yield return new WaitForSeconds(2f);
+
+        ChangeState(State.Returning);
+
+        isImpacted = false;
     }
 
     IEnumerator AttackCoroutine()
