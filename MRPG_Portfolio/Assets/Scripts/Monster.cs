@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -13,13 +14,16 @@ public class Monster : LivingEntity
     public float attackSpeed;
     public Vector3 boxSize = new Vector3(2, 2, 2);
     public Transform attackCol;
+    public event Action onDeath;
 
     private bool isAttacking = false;
-    public bool isImpacted = false;
+    private bool isImpacted = false;
     private float attackTimer = 0f;
     private float _distance;
+    private Color firstColor;
     private Vector3 _startPos;
     private Transform _target;
+    [SerializeField]private Material _material;
     private Animator _animator;
     private NavMeshAgent _nav;
 
@@ -37,11 +41,24 @@ public class Monster : LivingEntity
     {
         _animator = GetComponent<Animator>();
         _nav = GetComponent<NavMeshAgent>();
+        _material = GetComponentInChildren<SkinnedMeshRenderer>().material;
         _startPos = transform.position;
         _nav.speed = moveSpeed;
+        firstColor = _material.color;
         Setup();
 
         _target = GameObject.Find("Player").transform;
+    }
+
+    private void OnEnable()
+    {
+        this.GetComponent<CapsuleCollider>().enabled = true;
+        isAttacking = false;
+        isImpacted = false;
+        attackTimer = 0f;
+        _nav.enabled = false;
+        ChangeState(State.Waiting);
+        Setup();
     }
 
     void Update()
@@ -123,6 +140,13 @@ public class Monster : LivingEntity
         EnterState(_state);
     }
 
+    public void PosSetUp(Vector3 pos)
+    {
+        _startPos = pos;
+        transform.position = _startPos;
+        _nav.enabled = true;
+    }
+
     public override void OnDamage(float damage)
     {
         if (!isDead)
@@ -131,11 +155,12 @@ public class Monster : LivingEntity
             GameObject g = ObjectPool.instance.CallObj("MonsterDamage");
             g.transform.position = transform.position + Vector3.up;
             g.GetComponent<DamageText>().SetText(damage);
+            StartCoroutine(FlashCoroutine());
 
             if (isDead) return;
             if (!isImpacted)
             {
-                StopAllCoroutines();
+                StopCoroutine(AttackCoroutine());
                 isAttacking = false;
                 StartCoroutine(ImpactCoroutine());
             }
@@ -145,10 +170,20 @@ public class Monster : LivingEntity
     protected override void Die()
     {
         base.Die();
+        if(onDeath != null)
+        {
+            onDeath();
+            onDeath = null;
+        }
         _animator.SetTrigger("Die");
         this.GetComponent<CapsuleCollider>().enabled = false;
-        Destroy(gameObject, 5f);
-        this.enabled = false;
+        _nav.enabled = false;
+        Invoke("TurnOff", 5f);
+    }
+
+    private void TurnOff()
+    {
+        this.gameObject.SetActive(false);
     }
 
     private void AttackEvent()
@@ -162,6 +197,15 @@ public class Monster : LivingEntity
         }
     }
 
+    IEnumerator FlashCoroutine()
+    {
+        _material.color = new Color(255, 255, 255);
+
+        yield return new WaitForSeconds(0.1f);
+
+        _material.color = firstColor;
+    }
+
     IEnumerator ImpactCoroutine()
     {
         isImpacted = true;
@@ -170,7 +214,7 @@ public class Monster : LivingEntity
 
         ChangeState(State.Impacted);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
 
         ChangeState(State.Returning);
 

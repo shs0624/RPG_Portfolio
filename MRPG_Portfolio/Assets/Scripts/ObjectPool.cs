@@ -8,12 +8,15 @@ public class ObjectPool : MonoBehaviour
     public GameObject MobDamageText;
     public GameObject PlayerDamageText;
     public GameObject chainLightningPrefab;
+    public GameObject skeletonPrefab;
     public Transform DamageParent;
     public Transform SkillParent;
+    public Transform ObjectParent;
 
     GameObject[] MobDamageArr = new GameObject[100];
     GameObject[] PlayerDamageArr = new GameObject[100];
     GameObject[] ChainLightningArr = new GameObject[50];
+    GameObject[] SkeletonArr = new GameObject[100];
 
     GameObject[] target;
 
@@ -29,25 +32,32 @@ public class ObjectPool : MonoBehaviour
 
     private void Setup()
     {
-        for(int i = 0; i < 100; i++)
+        for(int i = 0; i < MobDamageArr.Length; i++)
         {
             MobDamageArr[i] = Instantiate(MobDamageText);
             MobDamageArr[i].transform.parent = DamageParent;
             MobDamageArr[i].SetActive(false);
         }
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < PlayerDamageArr.Length; i++)
         {
             PlayerDamageArr[i] = Instantiate(PlayerDamageText);
             PlayerDamageArr[i].transform.parent = DamageParent;
             PlayerDamageArr[i].SetActive(false);
         }
 
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < ChainLightningArr.Length; i++)
         {
             ChainLightningArr[i] = Instantiate(chainLightningPrefab);
             ChainLightningArr[i].transform.parent = SkillParent;
             ChainLightningArr[i].SetActive(false);
+        }
+
+        for (int i = 0; i < SkeletonArr.Length; i++)
+        {
+            SkeletonArr[i] = Instantiate(skeletonPrefab);
+            SkeletonArr[i].transform.parent = ObjectParent;
+            SkeletonArr[i].SetActive(false);
         }
     }
 
@@ -63,6 +73,9 @@ public class ObjectPool : MonoBehaviour
                 break;
             case "ChainLightning":
                 target = ChainLightningArr;
+                break;
+            case "Skeleton":
+                target = SkeletonArr;
                 break;
         }
 
