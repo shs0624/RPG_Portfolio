@@ -255,12 +255,7 @@ public class Monster : LivingEntity
 
         if(_distance < attackDist)
         {
-            if (attackTimer < attackSpan) ChangeState(State.Waiting);
-            else ChangeState(State.Attacking);
-        }
-        if(_distance > detectDist)
-        {
-            ChangeState(State.Returning);
+            if (attackTimer >= attackSpan) ChangeState(State.Attacking);
         }
     }
 

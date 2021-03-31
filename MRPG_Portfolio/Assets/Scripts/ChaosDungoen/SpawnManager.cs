@@ -14,7 +14,7 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField]private float _guage = 0f;
     [SerializeField]private int _remainingMonsters = 0;
-    private bool isCleard = false;
+    private bool isSpawning = true;
 
     private void Awake()
     {
@@ -27,25 +27,24 @@ public class SpawnManager : MonoBehaviour
 
     private void Update()
     {
-        if(_remainingMonsters == 0 && !isCleard)
+        if(_remainingMonsters == 0 && isSpawning)
         {
-            if(_guage >= bossSpawnGuage)
-            {
-                //보스를 스폰
-            }
-            else
-            {
-                //몬스터 스폰
-                SpawnMonsters();
-            }
+            SpawnMonsters();
         }
     }
 
     public void GuageUp(float _get)
     {
         _guage += _get;
-        if(_guage >= bossSpawnGuage)
+        if(_guage >= maxGuage)
         {
+            //게임 클리어
+            Debug.Log("Clear!");
+        }
+        else if(_guage >= bossSpawnGuage)
+        {
+            isSpawning = false;
+            SpawnBoss();
             //보스 스폰
         }
     }
@@ -66,9 +65,21 @@ public class SpawnManager : MonoBehaviour
                 GameObject g = ObjectPool.instance.CallObj("Skeleton");
                 g.GetComponent<Monster>().PosSetUp(pos);
                 g.GetComponent<Monster>().onDeath += () => _remainingMonsters--; 
-                g.GetComponent<Monster>().onDeath += () => GuageUp(1); 
+                g.GetComponent<Monster>().onDeath += () => GuageUp(10); 
                 _remainingMonsters++;
             }
         }
+    }
+
+    private void SpawnBoss()
+    {
+        int rand = Random.Range(0,spawnPoints.Length);
+
+        Vector3 pos = new Vector3(spawnPoints[rand].position.x, spawnPoints[rand].position.y, spawnPoints[rand].position.z);
+
+        GameObject g = ObjectPool.instance.CallObj("Boss");
+
+        g.GetComponent<Monster>().PosSetUp(pos);
+        g.GetComponent<Monster>().onDeath += () => GuageUp(50);
     }
 }

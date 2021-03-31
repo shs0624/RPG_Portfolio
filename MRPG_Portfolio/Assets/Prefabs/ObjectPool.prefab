@@ -113,6 +113,8 @@ MonoBehaviour:
     type: 3}
   skeletonPrefab: {fileID: 120931347178291754, guid: 2b451915867873041b5ed0bbd5a532ee,
     type: 3}
+  bossPrefab: {fileID: 120931347178291754, guid: 2b451915867873041b5ed0bbd5a532ee,
+    type: 3}
   DamageParent: {fileID: 0}
   SkillParent: {fileID: 711826336428115708}
   ObjectParent: {fileID: 1240504457}
