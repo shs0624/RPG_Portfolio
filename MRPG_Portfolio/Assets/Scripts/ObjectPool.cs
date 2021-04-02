@@ -91,6 +91,8 @@ public class ObjectPool : MonoBehaviour
                 break;
         }
 
+        Debug.Log(target);
+
         for(int i = 0; i < target.Length; i++)
         {
             if(!target[i].activeSelf)

@@ -686,7 +686,7 @@ MonoBehaviour:
   attackDamage: 0
   attackDist: 5
   attackSpan: 2
-  attackSpeed: 1.5
+  attackSpeed: 2
   _state: 0
 --- !u!195 &1404410053266814
 NavMeshAgent:

@@ -22,6 +22,10 @@ public class SpawnManager : MonoBehaviour
         {
             instance = this;
         }
+    }
+
+    private void Start()
+    {
         SpawnMonsters();
     }
 
@@ -62,7 +66,7 @@ public class SpawnManager : MonoBehaviour
                 Vector3 pos = new Vector3(spawnPoints[i].position.x + xOffset, spawnPoints[i].position.y, spawnPoints[i].position.z + zOffset);
                 Debug.Log(pos);
 
-                GameObject g = ObjectPool.instance.CallObj("Skeleton");
+                GameObject g = ObjectPool.instance.CallObj(mobNames[0]);
                 g.GetComponent<Monster>().PosSetUp(pos);
                 g.GetComponent<Monster>().onDeath += () => _remainingMonsters--; 
                 g.GetComponent<Monster>().onDeath += () => GuageUp(10); 
@@ -79,7 +83,7 @@ public class SpawnManager : MonoBehaviour
 
         GameObject g = ObjectPool.instance.CallObj("Boss");
 
-        g.GetComponent<Monster>().PosSetUp(pos);
-        g.GetComponent<Monster>().onDeath += () => GuageUp(50);
+        g.GetComponent<BossSkeleton>().PosSetUp(pos);
+        g.GetComponent<BossSkeleton>().onDeath += () => GuageUp(50);
     }
 }

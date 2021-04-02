@@ -12,6 +12,7 @@ public class Monster : LivingEntity
     public float attackDist;
     public float attackSpan;
     public float attackSpeed;
+    public float attackWaitingTime;
     public Vector3 boxSize = new Vector3(2, 2, 2);
     public Transform attackCol;
     public event Action onDeath;
@@ -224,17 +225,17 @@ public class Monster : LivingEntity
     IEnumerator AttackCoroutine()
     {
         isAttacking = true;
-
         _animator.SetTrigger("Attack");
+        transform.LookAt(_target.transform);
 
         yield return new WaitForSeconds(attackSpeed);
 
         AttackEvent();
 
+        yield return new WaitForSeconds(attackWaitingTime);
+
         attackTimer = 0f;
-
         isAttacking = false;
-
         _distance = Vector3.Distance(_target.position, transform.position);
         
         ChangeState(State.Chasing);
@@ -251,7 +252,16 @@ public class Monster : LivingEntity
     private void Chase()
     {
         _distance = Vector3.Distance(_target.position, transform.position);
-        _nav.SetDestination(_target.position);
+        if (_distance > attackDist - 0.2f)
+        {
+            _animator.SetBool("isMoving", true);
+            _nav.SetDestination(_target.position);
+        }
+        else
+        {
+            _animator.SetBool("isMoving", false);
+            _nav.SetDestination(transform.position);
+        }
 
         if(_distance < attackDist)
         {
