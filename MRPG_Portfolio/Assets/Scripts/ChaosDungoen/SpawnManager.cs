@@ -61,10 +61,8 @@ public class SpawnManager : MonoBehaviour
             {
                 float xOffset = Random.Range(-spawnOffset, spawnOffset);
                 float zOffset = Random.Range(-spawnOffset, spawnOffset);
-                Debug.Log(xOffset + " / " + zOffset);
 
                 Vector3 pos = new Vector3(spawnPoints[i].position.x + xOffset, spawnPoints[i].position.y, spawnPoints[i].position.z + zOffset);
-                Debug.Log(pos);
 
                 GameObject g = ObjectPool.instance.CallObj(mobNames[0]);
                 g.GetComponent<Monster>().PosSetUp(pos);

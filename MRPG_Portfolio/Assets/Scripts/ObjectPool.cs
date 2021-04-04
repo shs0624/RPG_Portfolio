@@ -7,16 +7,22 @@ public class ObjectPool : MonoBehaviour
     public static ObjectPool instance;
     public GameObject MobDamageText;
     public GameObject PlayerDamageText;
+    public GameObject IndicatorPrefab;
+    public GameObject SmashCrackEffect;
     public GameObject chainLightningPrefab;
     public GameObject skeletonPrefab;
     public GameObject bossPrefab;
     public Transform DamageParent;
     public Transform SkillParent;
     public Transform ObjectParent;
+    public Transform EffectParent;
+    public Transform IndicatorParent;
 
     GameObject[] MobDamageArr = new GameObject[100];
     GameObject[] PlayerDamageArr = new GameObject[100];
     GameObject[] ChainLightningArr = new GameObject[50];
+    GameObject[] IndicatorArr = new GameObject[5];
+    GameObject[] SmashEffectArr = new GameObject[5];
     GameObject[] SkeletonArr = new GameObject[100];
     GameObject[] BossArr = new GameObject[5];
 
@@ -55,6 +61,22 @@ public class ObjectPool : MonoBehaviour
             ChainLightningArr[i].SetActive(false);
         }
 
+        for (int i = 0; i < IndicatorArr.Length; i++)
+        {
+            IndicatorArr[i] = Instantiate(IndicatorPrefab);
+            IndicatorArr[i].transform.parent = IndicatorParent;
+            IndicatorArr[i].transform.Rotate(new Vector3(90f, 0, 0));
+            IndicatorArr[i].SetActive(false);
+        }
+
+        for (int i = 0; i < SmashEffectArr.Length; i++)
+        {
+            SmashEffectArr[i] = Instantiate(SmashCrackEffect);
+            SmashEffectArr[i].transform.parent = EffectParent;
+            SmashEffectArr[i].transform.Rotate(new Vector3(90f, 0, 0));
+            SmashEffectArr[i].SetActive(false);
+        }
+
         for (int i = 0; i < SkeletonArr.Length; i++)
         {
             SkeletonArr[i] = Instantiate(skeletonPrefab);
@@ -82,6 +104,12 @@ public class ObjectPool : MonoBehaviour
                 break;
             case "ChainLightning":
                 target = ChainLightningArr;
+                break;
+            case "Indicator":
+                target = IndicatorArr;
+                break;
+            case "SmashEffect":
+                target = SmashEffectArr;
                 break;
             case "Skeleton":
                 target = SkeletonArr;

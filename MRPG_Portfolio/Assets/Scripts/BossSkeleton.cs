@@ -8,7 +8,9 @@ public class BossSkeleton : LivingEntity
     public float[] patternPercentage;
     public float moveSpeed;
     public float attackDamage;
+    public float smashDamage;
     public float smashDistance;
+    public float smashRange;
     public float attackDistance;
     public float attackSpan;
     public float attackSpeed;
@@ -190,6 +192,45 @@ public class BossSkeleton : LivingEntity
         return input - 2 * heading;
     }
 
+    private void SmashEvent(Vector3 pos)
+    {
+        Collider[] colls = Physics.OverlapSphere(pos, smashRange, LayerMask.GetMask("Player"));
+
+        foreach (Collider coll in colls)
+        {
+            PlayerHealth pHealth = coll.GetComponent<PlayerHealth>();
+            pHealth.OnDamage(smashDamage);
+        }
+    }
+
+    IEnumerator SmashEffectCoroutine(float time, Vector3 pos)
+    {
+        GameObject effect = ObjectPool.instance.CallObj("SmashEffect");
+        effect.transform.position = pos;
+        effect.GetComponent<ParticleSystem>().Play();
+
+        yield return new WaitForSeconds(time);
+
+        effect.SetActive(false);
+    }
+
+    IEnumerator ShowIndicator(float time)
+    {
+        GameObject indicator = ObjectPool.instance.CallObj("Indicator");
+        Vector3 pos = _target.position;
+        indicator.transform.position = pos;
+        Vector3 firstscale = indicator.transform.localScale;
+        indicator.transform.localScale = new Vector3(smashRange, smashRange, indicator.transform.localScale.z);
+
+        yield return new WaitForSeconds(time - 0.2f);
+        indicator.transform.localScale = firstscale;
+        indicator.SetActive(false);
+
+        yield return new WaitForSeconds(0.2f);
+        SmashEvent(pos);
+        StartCoroutine(SmashEffectCoroutine(time, pos));
+    }
+
     IEnumerator SmashCoroutine()
     {
         isAttacking = true;
@@ -199,7 +240,7 @@ public class BossSkeleton : LivingEntity
         yield return new WaitForSeconds(2.5f);
 
         transform.LookAt(_target.transform);
-        _animator.SetTrigger("Smash");
+        _animator.SetTrigger("SmashJump");
         StartCoroutine(SmashMoveUpdate(_target.position,1.5f));
 
         yield return new WaitForSeconds(1.5f);
@@ -217,17 +258,23 @@ public class BossSkeleton : LivingEntity
     IEnumerator SmashMoveUpdate(Vector3 targetPos, float duration)
     {
         float timer = 0f;
+        bool triggerd = false;
 
         Vector3 startPos = transform.position;
         Vector3 pos = startPos;
 
         Vector3 _targetPos = GetLandingPosition(targetPos);
         //_targetPos에 빨간색 범위 표시하기.
-        Debug.Log(_targetPos);
+        StartCoroutine(ShowIndicator(duration));
 
         while (timer < duration)
         {
             timer += Time.deltaTime;
+            if (timer >= duration - 0.3f && !triggerd)
+            {
+                _animator.SetTrigger("SmashAttack");
+                triggerd = true;
+            }
 
             pos.x = Mathf.Lerp(startPos.x, _targetPos.x, timer / duration);
             pos.y = Mathf.Lerp(startPos.y, _targetPos.y, timer / duration);
@@ -240,7 +287,7 @@ public class BossSkeleton : LivingEntity
 
         //_targetPos의 범위 내부 적에게 데미지 주기.
         pos = _targetPos;
-        transform.localPosition = pos;
+        //transform.localPosition = pos;
     }
 
     IEnumerator AttackCoroutine()
