@@ -64,13 +64,15 @@ public class WheelWindController : SkillController
         //감지된 적에게 데미지주기.
         foreach (Collider col in colls)
         {
-            col.GetComponent<Monster>().OnDamage(damagePerTick);
+            col.GetComponent<LivingEntity>().OnDamage(damagePerTick, "Monster");
         }
     }
 
+    /*
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(_player.transform.position, rangeRadius);
     }
+    */
 }

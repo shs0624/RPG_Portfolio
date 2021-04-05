@@ -17,12 +17,18 @@ public class LivingEntity : MonoBehaviour
         _health = startingHealth;
     }
 
-    public virtual void OnDamage(float damage)
+    public virtual void OnDamage(float damage, string tag)
     {
+        GameObject g;
         _health -= damage;
         Debug.Log(this.gameObject + " / Get Damaged!");
 
-        if(_health <= 0)
+        if (tag == "Monster") g = ObjectPool.instance.CallObj("MonsterDamage");
+        else g = ObjectPool.instance.CallObj("PlayerDamage");
+        g.transform.position = transform.position + Vector3.up;
+        g.GetComponent<DamageText>().SetText(damage);
+
+        if (_health <= 0)
         {
             Die();
         }

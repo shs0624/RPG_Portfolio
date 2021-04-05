@@ -9,6 +9,7 @@ public class ObjectPool : MonoBehaviour
     public GameObject PlayerDamageText;
     public GameObject IndicatorPrefab;
     public GameObject SmashCrackEffect;
+    public GameObject SummonEffect;
     public GameObject chainLightningPrefab;
     public GameObject skeletonPrefab;
     public GameObject bossPrefab;
@@ -23,6 +24,7 @@ public class ObjectPool : MonoBehaviour
     GameObject[] ChainLightningArr = new GameObject[50];
     GameObject[] IndicatorArr = new GameObject[5];
     GameObject[] SmashEffectArr = new GameObject[5];
+    GameObject[] SummonEffectArr = new GameObject[10];
     GameObject[] SkeletonArr = new GameObject[100];
     GameObject[] BossArr = new GameObject[5];
 
@@ -77,6 +79,14 @@ public class ObjectPool : MonoBehaviour
             SmashEffectArr[i].SetActive(false);
         }
 
+        for (int i = 0; i < SummonEffectArr.Length; i++)
+        {
+            SummonEffectArr[i] = Instantiate(SummonEffect);
+            SummonEffectArr[i].transform.parent = EffectParent;
+            //SummonEffectArr[i].transform.Rotate(new Vector3(90f, 0, 0));
+            SummonEffectArr[i].SetActive(false);
+        }
+
         for (int i = 0; i < SkeletonArr.Length; i++)
         {
             SkeletonArr[i] = Instantiate(skeletonPrefab);
@@ -110,6 +120,9 @@ public class ObjectPool : MonoBehaviour
                 break;
             case "SmashEffect":
                 target = SmashEffectArr;
+                break;
+            case "SummonEffect":
+                target = SummonEffectArr;
                 break;
             case "Skeleton":
                 target = SkeletonArr;

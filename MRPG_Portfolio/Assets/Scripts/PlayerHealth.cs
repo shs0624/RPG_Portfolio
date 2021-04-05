@@ -13,13 +13,9 @@ public class PlayerHealth : LivingEntity
         Setup();
     }
 
-    public override void OnDamage(float damage)
+    public override void OnDamage(float damage, string tag)
     {
-        base.OnDamage(damage);
-        GameObject g = ObjectPool.instance.CallObj("PlayerDamage");
-
-        g.transform.position = transform.position + Vector3.up;
-        g.GetComponent<DamageText>().SetText(damage);
+        base.OnDamage(damage, tag);
     }
 
     protected override void Die()

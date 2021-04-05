@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -15,12 +16,16 @@ public class BossSkeleton : LivingEntity
     public float attackSpan;
     public float attackSpeed;
     public float waitingTime;
+    public Transform[] SpawnLocations;
+    public event Action onDeath;
 
+    private int patternIdx = 0;
     private int attackCount = 0;
     private float attackTimer;
     private float _hpPercentage;
     private float _distance;
     private bool isAttacking = false;
+    private bool TurnToSpawn = false;
     private Color firstColor;
     private Transform _target;
     private Animator _animator;
@@ -44,8 +49,20 @@ public class BossSkeleton : LivingEntity
         _material = GetComponentInChildren<SkinnedMeshRenderer>().material;
         _nav.speed = moveSpeed;
         firstColor = _material.color;
+        base.Setup();
 
         _target = GameObject.Find("Player").transform;
+    }
+
+    private void OnEnable()
+    {
+        this.GetComponent<CapsuleCollider>().enabled = true;
+        isAttacking = false;
+        TurnToSpawn = false;
+        attackTimer = 0f;
+        _nav.enabled = false;
+        ChangeState(State.Chasing);
+        base.Setup();
     }
 
     // Update is called once per frame
@@ -67,7 +84,24 @@ public class BossSkeleton : LivingEntity
                 Smash();
                 break;
             case State.Summoning:
+                Summon();
                 break;
+        }
+    }
+
+    public override void OnDamage(float damage, string tag)
+    {
+        base.OnDamage(damage, tag);
+
+        if (patternIdx >= patternPercentage.Length) return;
+
+        float per = (_health / startingHealth) * 100f;
+        Debug.Log("per : " + per);
+
+        if(per <= patternPercentage[patternIdx])
+        {
+            TurnToSpawn = true;
+            patternIdx++;
         }
     }
 
@@ -145,7 +179,12 @@ public class BossSkeleton : LivingEntity
 
         if(_distance <= smashDistance)
         {
-            if(attackCount >= 2)
+            if(TurnToSpawn)
+            {
+                if (attackTimer < attackSpan) ChangeState(State.Summoning);
+                TurnToSpawn = false;
+            }
+            else if(attackCount >= 2)
             {
                 if (attackTimer < attackSpan) ChangeState(State.Smashing);
             }
@@ -172,6 +211,14 @@ public class BossSkeleton : LivingEntity
         }
     }
 
+    private void Summon()
+    {
+        if(!isAttacking)
+        {
+            StartCoroutine(SummonCoroutine());
+        }
+    }
+
     private void AttackEvent()
     {
         _distance = Vector3.Distance(_target.position, transform.position);
@@ -179,7 +226,7 @@ public class BossSkeleton : LivingEntity
         if (_distance <= attackDistance)
         {
             LivingEntity living = _target.GetComponent<LivingEntity>();
-            living.OnDamage(attackDamage);
+            living.OnDamage(attackDamage, "Player");
         }
     }
 
@@ -199,8 +246,43 @@ public class BossSkeleton : LivingEntity
         foreach (Collider coll in colls)
         {
             PlayerHealth pHealth = coll.GetComponent<PlayerHealth>();
-            pHealth.OnDamage(smashDamage);
+            pHealth.OnDamage(smashDamage, "Player");
         }
+    }
+
+    //1. 소환 위치에 스켈레톤 프리팹을 소환.
+    //2. 소환 당시 보스는 소환 애니메이션 재생
+    //3. 소환 위치에 소환 이펙트를 재생.
+    //4. 소환이 끝나고, 일정시간 Idle을 유치하고 Chase 상태로 변경.
+    IEnumerator SummonCoroutine()
+    {
+        Debug.Log("소환");
+        isAttacking = true;
+
+        _animator.SetTrigger("Summon");
+
+        for(int i = 0; i < SpawnLocations.Length; i++)
+        {
+            GameObject s = ObjectPool.instance.CallObj("Skeleton");
+            s.GetComponent<Monster>().PosSetUp(SpawnLocations[i].position);
+
+            this.onDeath += () => s.SetActive(false);
+        }
+        //소환코드 여기
+        for (int i = 0; i < SpawnLocations.Length; i++)
+        {
+            GameObject e = ObjectPool.instance.CallObj("SummonEffect");
+            e.transform.position = SpawnLocations[i].position;
+        }
+        //이펙트도 여기
+
+        yield return new WaitForSeconds(3f);
+
+        _animator.SetTrigger("Return");
+
+        ChangeState(State.Chasing);
+        Debug.Log("소환끝");
+        isAttacking = false;
     }
 
     IEnumerator SmashEffectCoroutine(float time, Vector3 pos)

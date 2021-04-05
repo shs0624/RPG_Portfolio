@@ -148,14 +148,11 @@ public class Monster : LivingEntity
         _nav.enabled = true;
     }
 
-    public override void OnDamage(float damage)
+    public override void OnDamage(float damage, string tag)
     {
         if (!isDead)
         {
-            base.OnDamage(damage);
-            GameObject g = ObjectPool.instance.CallObj("MonsterDamage");
-            g.transform.position = transform.position + Vector3.up;
-            g.GetComponent<DamageText>().SetText(damage);
+            base.OnDamage(damage, tag);
             StartCoroutine(FlashCoroutine());
 
             if (isDead) return;
@@ -194,9 +191,26 @@ public class Monster : LivingEntity
         if(_distance <= attackDist)
         {
             LivingEntity living = _target.GetComponent<LivingEntity>();
-            living.OnDamage(attackDamage);
+            living.OnDamage(attackDamage, "Player");
         }
     }
+
+    /*
+    IEnumerator ActiveCoroutine()
+    {
+        yield return new WaitForSeconds(1.0f);
+
+        _animator.SetTrigger("Active");
+
+        this.GetComponent<CapsuleCollider>().enabled = true;
+        isAttacking = false;
+        isImpacted = false;
+        attackTimer = 0f;
+        _nav.enabled = false;
+        ChangeState(State.Waiting);
+        Setup();
+    }
+    */
 
     IEnumerator FlashCoroutine()
     {

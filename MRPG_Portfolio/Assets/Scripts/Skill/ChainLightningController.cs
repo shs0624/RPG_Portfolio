@@ -15,7 +15,7 @@ public class ChainLightningController : SkillController
     private float _damage;
     private float _coolTime;
     private GameObject _player;
-    private List<Monster> targetList = new List<Monster>();
+    private List<LivingEntity> targetList = new List<LivingEntity>();
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +48,7 @@ public class ChainLightningController : SkillController
     {
         for (int i = 0; i < targetList.Count; i++)
         {
-            targetList[i].OnDamage(_damage);
+            targetList[i].OnDamage(_damage, "Monster");
         }
     }
 
@@ -67,7 +67,7 @@ public class ChainLightningController : SkillController
 
     private void SetTargetList()
     {
-        Dictionary<Monster, float> targetDictionary = new Dictionary<Monster, float>();
+        Dictionary<LivingEntity, float> targetDictionary = new Dictionary<LivingEntity, float>();
 
         Collider[] colls = Physics.OverlapBox
             (chainRange.position, boxSize, chainRange.rotation, LayerMask.GetMask("Monster"));
@@ -75,12 +75,12 @@ public class ChainLightningController : SkillController
         //거리와 객체를 Dictionary에 넣기.
         foreach (Collider col in colls)
         {
-            targetDictionary.Add(col.GetComponent<Monster>(), Vector3.Distance(_player.transform.position, col.transform.position));
+            targetDictionary.Add(col.GetComponent<LivingEntity>(), Vector3.Distance(_player.transform.position, col.transform.position));
         }
 
-        List<Monster> mobList = targetDictionary.Keys.ToList();
+        List<LivingEntity> mobList = targetDictionary.Keys.ToList();
 
-        mobList.Sort(delegate (Monster A, Monster B)
+        mobList.Sort(delegate (LivingEntity A, LivingEntity B)
         {
             if (targetDictionary[A] > targetDictionary[B]) return 1;
             else if (targetDictionary[A] < targetDictionary[B]) return -1;
@@ -93,10 +93,10 @@ public class ChainLightningController : SkillController
         ChainEnemies(mobList[0]);
     }
 
-    private void ChainEnemies(Monster center)
+    private void ChainEnemies(LivingEntity center)
     {
-        Monster _center = center;
-        Dictionary<Monster, float> tempDictionary = new Dictionary<Monster, float>();
+        LivingEntity _center = center;
+        Dictionary<LivingEntity, float> tempDictionary = new Dictionary<LivingEntity, float>();
 
         while (count < chainLimit)
         {
@@ -107,16 +107,16 @@ public class ChainLightningController : SkillController
             {
                 foreach (Collider col in colls)
                 {
-                    if (targetList.Contains(col.GetComponent<Monster>())) continue;
+                    if (targetList.Contains(col.GetComponent<LivingEntity>())) continue;
 
-                    tempDictionary.Add(col.GetComponent<Monster>(), Vector3.Distance(_center.transform.position, col.transform.position));
+                    tempDictionary.Add(col.GetComponent<LivingEntity>(), Vector3.Distance(_center.transform.position, col.transform.position));
                 }
 
                 if (tempDictionary.Count == 0) break;
 
-                List<Monster> mobList = tempDictionary.Keys.ToList();
+                List<LivingEntity> mobList = tempDictionary.Keys.ToList();
 
-                mobList.Sort(delegate (Monster A, Monster B)
+                mobList.Sort(delegate (LivingEntity A, LivingEntity B)
                 {
                     if (tempDictionary[A] > tempDictionary[B]) return 1;
                     else if (tempDictionary[A] < tempDictionary[B]) return -1;

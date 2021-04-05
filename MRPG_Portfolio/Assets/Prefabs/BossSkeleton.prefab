@@ -1,5 +1,65 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1442801627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1442801628}
+  m_Layer: 9
+  m_Name: SpawnPoint2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1442801628
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442801627}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.294, y: 0.77, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4835812519186396046}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1662115451
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1662115452}
+  m_Layer: 9
+  m_Name: SpawnPoint1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1662115452
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1662115451}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.456, y: 0.77, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4835812519186396046}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4830144032201251286
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,7 +679,9 @@ GameObject:
   - component: {fileID: 4782521784239666842}
   - component: {fileID: 1404410053266813}
   - component: {fileID: 1404410053266814}
-  m_Layer: 0
+  - component: {fileID: 1740112692}
+  - component: {fileID: 1740112691}
+  m_Layer: 9
   m_Name: BossSkeleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -645,6 +707,8 @@ Transform:
   - {fileID: 4828593362284487418}
   - {fileID: 4835802435547214392}
   - {fileID: 4835923443109300444}
+  - {fileID: 1662115452}
+  - {fileID: 1442801628}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -679,14 +743,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f3e602776dc651489f7fcf68d8ad14c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingHealth: 200
+  startingHealth: 30
   _health: 0
-  patternPercentage: []
+  patternPercentage:
+  - 80
+  - 30
   moveSpeed: 3
-  attackDamage: 0
-  attackDist: 5
+  attackDamage: 3
+  smashDamage: 10
+  smashDistance: 6
+  smashRange: 3
+  attackDistance: 4
   attackSpan: 2
-  attackSpeed: 2
+  attackSpeed: 1
+  waitingTime: 1.5
+  SpawnLocations:
+  - {fileID: 1662115452}
+  - {fileID: 1442801628}
   _state: 0
 --- !u!195 &1404410053266814
 NavMeshAgent:
@@ -710,6 +783,36 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &1740112692
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4830271325649952068}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!54 &1740112691
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4830271325649952068}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &4830312898138816400
 GameObject:
   m_ObjectHideFlags: 0
