@@ -105,10 +105,29 @@ public class BossSkeleton : LivingEntity
         }
     }
 
+    protected override void Die()
+    {
+        base.Die();
+        if (onDeath != null)
+        {
+            onDeath();
+            onDeath = null;
+        }
+        _animator.SetTrigger("Die");
+        this.GetComponent<CapsuleCollider>().enabled = false;
+        _nav.enabled = false;
+        Invoke("TurnOff", 3f);
+    }
+
     public void PosSetUp(Vector3 pos)
     {
         transform.position = pos;
         _nav.enabled = true;
+    }
+
+    private void TurnOff()
+    {
+        this.gameObject.SetActive(false);
     }
 
     private void EnterState(State st)

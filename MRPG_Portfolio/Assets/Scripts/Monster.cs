@@ -53,13 +53,7 @@ public class Monster : LivingEntity
 
     private void OnEnable()
     {
-        this.GetComponent<CapsuleCollider>().enabled = true;
-        isAttacking = false;
-        isImpacted = false;
-        attackTimer = 0f;
-        _nav.enabled = false;
-        ChangeState(State.Waiting);
-        Setup();
+        StartCoroutine(ActiveCoroutine());
     }
 
     void Update()
@@ -195,10 +189,14 @@ public class Monster : LivingEntity
         }
     }
 
-    /*
     IEnumerator ActiveCoroutine()
     {
-        yield return new WaitForSeconds(1.0f);
+        _animator.Play("beforeActive");
+        _nav.enabled = false;
+        // NavMeshAgent는 enable 상태일때 transform.position으로 위치를 변경하면 고장난다.
+        // 활성화를 끄고 위치 변경후 다시 키는게 방법
+
+        yield return new WaitForSeconds(1.5f);
 
         _animator.SetTrigger("Active");
 
@@ -206,12 +204,11 @@ public class Monster : LivingEntity
         isAttacking = false;
         isImpacted = false;
         attackTimer = 0f;
-        _nav.enabled = false;
+        _nav.enabled = true;
         ChangeState(State.Waiting);
         Setup();
     }
-    */
-
+    
     IEnumerator FlashCoroutine()
     {
         _material.color = new Color(255, 255, 255);

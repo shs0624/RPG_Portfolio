@@ -9,6 +9,7 @@ public class SpawnManager : MonoBehaviour
     public float bossSpawnGuage;
     public int numToSpawn;
     public float spawnOffset;
+    public GuageUI chaosUI;
     public Transform[] spawnPoints;
     public string[] mobNames;
 
@@ -26,6 +27,7 @@ public class SpawnManager : MonoBehaviour
 
     private void Start()
     {
+        chaosUI.SetGuage(_guage);
         SpawnMonsters();
     }
 
@@ -40,6 +42,7 @@ public class SpawnManager : MonoBehaviour
     public void GuageUp(float _get)
     {
         _guage += _get;
+        chaosUI.SetGuage(_guage);
         if(_guage >= maxGuage)
         {
             //게임 클리어
