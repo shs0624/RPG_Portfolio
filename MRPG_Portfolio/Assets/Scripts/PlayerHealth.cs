@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerHealth : LivingEntity
 {
+    public UIManager uIManager;
     Animator _animator;
 
     // Start is called before the first frame update
@@ -13,9 +14,18 @@ public class PlayerHealth : LivingEntity
         Setup();
     }
 
+    public void HealHitPoint(float heal)
+    {
+        _health += heal;
+        if (_health > startingHealth) _health = startingHealth;
+
+        uIManager.SetHitGuage(_health);
+    }
+
     public override void OnDamage(float damage, string tag)
     {
         base.OnDamage(damage, tag);
+        uIManager.SetHitGuage(_health);
     }
 
     protected override void Die()

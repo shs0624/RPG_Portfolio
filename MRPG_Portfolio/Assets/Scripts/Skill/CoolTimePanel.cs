@@ -17,11 +17,18 @@ public class CoolTimePanel : MonoBehaviour
         image.fillAmount = 1f;
     }
 
-    public void timeSetting(float cool)
+    public void timeInitialSetting(float cool)
     {
         canUse = false;
         coolTime = cool;
         Timer = coolTime;
+    }
+
+    public void timeSetting(float cool,float timer)
+    {
+        canUse = false;
+        coolTime = cool;
+        Timer = timer;
     }
 
     private void Update()

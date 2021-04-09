@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GuageUI : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
     public float maxChaosPoint;
+    public float maxHitPoint;
     public Image currentChaosGlobe;
+    public Image currentHitBar;
     public Text chaosText;
 
     private float chaosPoint;
+    private float hitPoint;
 
     // Start is called before the first frame update
     void Start()
     {
-        SetGuage(0f);
+        SetChaosGuage(0f);
+        SetHitGuage(maxHitPoint);
     }
 
     // Update is called once per frame
@@ -23,10 +27,22 @@ public class GuageUI : MonoBehaviour
         UpdateChaosGlobe();
     }
 
-    public void SetGuage(float p)
+    public void SetChaosGuage(float p)
     {
         chaosPoint = p;
         UpdateChaosGlobe();
+    }
+
+    public void SetHitGuage(float p)
+    {
+        hitPoint = p;
+        UpdateHitBar();
+    }
+
+    private void UpdateHitBar()
+    {
+        float ratio = hitPoint / maxHitPoint;
+        currentHitBar.fillAmount = ratio;
     }
 
     private void UpdateChaosGlobe()

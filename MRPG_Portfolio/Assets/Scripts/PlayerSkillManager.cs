@@ -86,4 +86,19 @@ public class PlayerSkillManager : MonoBehaviour
 
         coolTimes[cnt] = skillList[cnt].CoolTime;
     }
+
+    public float GetCoolTime(Skill skill)
+    {
+        int cnt = 0;
+        for (int i = 0; i < skillList.Length; i++)
+        {
+            if (skill == skillList[i])
+            {
+                cnt = i; break;
+            }
+        }
+
+        return coolTimes[cnt];
+    }
 }
+
