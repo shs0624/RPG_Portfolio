@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class BossSkeleton : LivingEntity
 {
@@ -17,6 +18,8 @@ public class BossSkeleton : LivingEntity
     public float attackSpeed;
     public float waitingTime;
     public Transform[] SpawnLocations;
+    public Image bossHitBar;
+    public Text bossHitText;
     public event Action onDeath;
 
     private int patternIdx = 0;
@@ -51,6 +54,8 @@ public class BossSkeleton : LivingEntity
         firstColor = _material.color;
         base.Setup();
 
+        bossHitBar = GameObject.Find("UICanvas").transform.Find("BossHitFrame").transform.Find("BossHitBar").GetComponent<Image>();
+        bossHitText = bossHitBar.transform.Find("BossHitText").GetComponent<Text>();
         _target = GameObject.Find("Player").transform;
     }
 
@@ -92,13 +97,13 @@ public class BossSkeleton : LivingEntity
     public override void OnDamage(float damage, string tag)
     {
         base.OnDamage(damage, tag);
+        UpdateBossHitBar(startingHealth, _health);
 
         if (patternIdx >= patternPercentage.Length) return;
 
         float per = (_health / startingHealth) * 100f;
-        Debug.Log("per : " + per);
 
-        if(per <= patternPercentage[patternIdx])
+        if (per <= patternPercentage[patternIdx])
         {
             TurnToSpawn = true;
             patternIdx++;
@@ -119,10 +124,20 @@ public class BossSkeleton : LivingEntity
         Invoke("TurnOff", 3f);
     }
 
-    public void PosSetUp(Vector3 pos)
+    public void InitSetting(Vector3 pos)
     {
         transform.position = pos;
         _nav.enabled = true;
+        UpdateBossHitBar(startingHealth, _health);
+    }   
+
+    private void UpdateBossHitBar(float max, float current)
+    {
+        float ratio = current / max;
+        string str = string.Format("{0:0.00}", float.Parse((ratio*100f).ToString())) + "%";
+        bossHitBar.fillAmount = ratio;
+
+        bossHitText.text = str;
     }
 
     private void TurnOff()

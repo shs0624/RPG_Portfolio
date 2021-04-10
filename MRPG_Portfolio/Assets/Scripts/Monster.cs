@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Monster : LivingEntity
 {
@@ -15,6 +16,8 @@ public class Monster : LivingEntity
     public float attackWaitingTime;
     public Vector3 boxSize = new Vector3(2, 2, 2);
     public Transform attackCol;
+    public GameObject hitPointCanvas;
+    public Image hitPointBar;
     public event Action onDeath;
 
     private bool isAttacking = false;
@@ -48,6 +51,8 @@ public class Monster : LivingEntity
         firstColor = _material.color;
         Setup();
 
+        ShowHitCanvas(true);
+        UpdateHitBar();
         _target = GameObject.Find("Player").transform;
     }
 
@@ -128,6 +133,17 @@ public class Monster : LivingEntity
         }
     }
 
+    private void ShowHitCanvas(bool boolean)
+    {
+        hitPointCanvas.SetActive(boolean);
+    }
+
+    private void UpdateHitBar()
+    {
+        float ratio = _health / startingHealth;
+        hitPointBar.fillAmount = ratio;
+    }
+
     private void ChangeState(State st)
     {
         ExitState(_state);
@@ -147,6 +163,7 @@ public class Monster : LivingEntity
         if (!isDead)
         {
             base.OnDamage(damage, tag);
+            UpdateHitBar();
             StartCoroutine(FlashCoroutine());
 
             if (isDead) return;
@@ -168,6 +185,7 @@ public class Monster : LivingEntity
             onDeath = null;
         }
         _animator.SetTrigger("Die");
+        ShowHitCanvas(false);
         this.GetComponent<CapsuleCollider>().enabled = false;
         _nav.enabled = false;
         Invoke("TurnOff", 5f);
@@ -192,6 +210,10 @@ public class Monster : LivingEntity
     IEnumerator ActiveCoroutine()
     {
         _animator.Play("beforeActive");
+        Setup();
+        ShowHitCanvas(true);
+        UpdateHitBar();
+        isImpacted = true;
         _nav.enabled = false;
         // NavMeshAgent는 enable 상태일때 transform.position으로 위치를 변경하면 고장난다.
         // 활성화를 끄고 위치 변경후 다시 키는게 방법
@@ -206,7 +228,6 @@ public class Monster : LivingEntity
         attackTimer = 0f;
         _nav.enabled = true;
         ChangeState(State.Waiting);
-        Setup();
     }
     
     IEnumerator FlashCoroutine()

@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
 {
     public float maxChaosPoint;
     public float maxHitPoint;
+    public GameObject BossHitUI;
     public Image currentChaosGlobe;
     public Image currentHitBar;
     public Text chaosText;
@@ -37,6 +38,11 @@ public class UIManager : MonoBehaviour
     {
         hitPoint = p;
         UpdateHitBar();
+    }
+
+    public void ShowBossHitBar()
+    {
+        BossHitUI.SetActive(!BossHitUI.activeSelf);
     }
 
     private void UpdateHitBar()

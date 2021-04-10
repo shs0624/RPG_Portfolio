@@ -5,16 +5,16 @@ using UnityEngine.UI;
 
 public class UIPopUp : MonoBehaviour
 {
-    private GameObject targetPopUP;
+    public GameObject skillPopUp;
 
     // Start is called before the first frame update
     void Start()
     {
-        targetPopUP = this.gameObject;
+        skillPopUp.SetActive(false);
     }
 
-    public void PopUpEvent()
+    public void SkillUIPopUp()
     {
-        targetPopUP.SetActive(!targetPopUP.activeSelf);
+        skillPopUp.SetActive(!skillPopUp.activeSelf);
     }
 }

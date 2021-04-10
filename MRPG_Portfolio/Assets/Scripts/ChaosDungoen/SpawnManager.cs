@@ -70,7 +70,7 @@ public class SpawnManager : MonoBehaviour
                 GameObject g = ObjectPool.instance.CallObj(mobNames[0]);
                 g.GetComponent<Monster>().PosSetUp(pos);
                 g.GetComponent<Monster>().onDeath += () => _remainingMonsters--; 
-                g.GetComponent<Monster>().onDeath += () => GuageUp(5); 
+                g.GetComponent<Monster>().onDeath += () => GuageUp(10); 
                 _remainingMonsters++;
             }
         }
@@ -84,7 +84,8 @@ public class SpawnManager : MonoBehaviour
 
         GameObject g = ObjectPool.instance.CallObj("Boss");
 
-        g.GetComponent<BossSkeleton>().PosSetUp(pos);
+        chaosUI.ShowBossHitBar();
+        g.GetComponent<BossSkeleton>().InitSetting(pos);
         g.GetComponent<BossSkeleton>().onDeath += () => GuageUp(50);
     }
 }
