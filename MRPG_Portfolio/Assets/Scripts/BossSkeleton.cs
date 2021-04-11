@@ -315,7 +315,6 @@ public class BossSkeleton : LivingEntity
         _animator.SetTrigger("Return");
 
         ChangeState(State.Chasing);
-        Debug.Log("소환끝");
         isAttacking = false;
     }
 

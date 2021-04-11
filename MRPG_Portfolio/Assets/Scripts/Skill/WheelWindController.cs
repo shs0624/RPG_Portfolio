@@ -64,15 +64,10 @@ public class WheelWindController : SkillController
         //감지된 적에게 데미지주기.
         foreach (Collider col in colls)
         {
+            GameObject hitEffect = ObjectPool.instance.CallObj("HitEffect");
+            hitEffect.transform.position = col.transform.position + new Vector3(0, 1f, 0);
+            hitEffect.GetComponent<ParticleSystem>().Play();
             col.GetComponent<LivingEntity>().OnDamage(damagePerTick, "Monster");
         }
     }
-
-    /*
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(_player.transform.position, rangeRadius);
-    }
-    */
 }

@@ -508,7 +508,7 @@ MonoBehaviour:
   _health: 0
   attackDamage: 5
   moveSpeed: 2
-  detectDist: 5
+  detectDist: 10
   attackDist: 2
   attackSpan: 2
   attackSpeed: 0.8

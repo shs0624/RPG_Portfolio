@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &799922973
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 799922974}
+  m_Layer: 0
+  m_Name: Effects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &799922974
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799922973}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 711826336444403450}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1240504456
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,6 +120,7 @@ Transform:
   m_Children:
   - {fileID: 711826336428115708}
   - {fileID: 1240504457}
+  - {fileID: 799922974}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -109,12 +140,21 @@ MonoBehaviour:
     type: 3}
   PlayerDamageText: {fileID: 7205507913027583554, guid: c91a9df3c42ce174d841cd4297187200,
     type: 3}
+  IndicatorPrefab: {fileID: 977572593890076631, guid: 464f2bc849015d041b87b3dd1399d6b3,
+    type: 3}
+  SmashCrackEffect: {fileID: 2618515106799401956, guid: 655de8f5b35fc9a48b73bf5c31cbaa59,
+    type: 3}
+  HitEffect: {fileID: 100004, guid: 757df604761b8ef42831192c70ee1099, type: 3}
+  LightningHitEffect: {fileID: 100000, guid: 77ec3c4e07a36814fb3169ecef41b50a, type: 3}
+  SummonEffect: {fileID: 100000, guid: 7b56cd9b663f23f429e131a54ec87db0, type: 3}
   chainLightningPrefab: {fileID: 5889721504923660685, guid: b6dc3c6e0a4f96b4e9fffcc7c7fb07b3,
     type: 3}
   skeletonPrefab: {fileID: 120931347178291754, guid: 2b451915867873041b5ed0bbd5a532ee,
     type: 3}
-  bossPrefab: {fileID: 120931347178291754, guid: 2b451915867873041b5ed0bbd5a532ee,
+  bossPrefab: {fileID: 4830271325649952068, guid: b6a222d088e68c3438615f9a78ea07cc,
     type: 3}
   DamageParent: {fileID: 0}
   SkillParent: {fileID: 711826336428115708}
   ObjectParent: {fileID: 1240504457}
+  EffectParent: {fileID: 799922974}
+  IndicatorParent: {fileID: 0}

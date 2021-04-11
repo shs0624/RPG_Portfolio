@@ -41,6 +41,8 @@ public class SpawnManager : MonoBehaviour
 
     public void GuageUp(float _get)
     {
+        if (!isSpawning) return;
+
         _guage += _get;
         chaosUI.SetChaosGuage(_guage);
         if(_guage >= maxGuage)
@@ -54,6 +56,14 @@ public class SpawnManager : MonoBehaviour
             SpawnBoss();
             //보스 스폰
         }
+    }
+
+    private void ClearGame()
+    {
+        _guage = 100f;
+        chaosUI.SetChaosGuage(_guage);
+
+        GameManager.instance.GameClear();
     }
 
     public void SpawnMonsters()
@@ -86,6 +96,6 @@ public class SpawnManager : MonoBehaviour
 
         chaosUI.ShowBossHitBar();
         g.GetComponent<BossSkeleton>().InitSetting(pos);
-        g.GetComponent<BossSkeleton>().onDeath += () => GuageUp(50);
+        g.GetComponent<BossSkeleton>().onDeath += () => ClearGame();
     }
 }

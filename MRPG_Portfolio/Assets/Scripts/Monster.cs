@@ -103,6 +103,7 @@ public class Monster : LivingEntity
                 break;
             case State.Impacted:
                 _nav.isStopped = true;
+                StopCoroutine(AttackCoroutine());
                 _animator.SetBool("isMoving", false);
                 break;
             case State.Returning:
@@ -198,6 +199,8 @@ public class Monster : LivingEntity
 
     private void AttackEvent()
     {
+        if (isImpacted) return;
+
         _distance = Vector3.Distance(_target.position, transform.position);
 
         if(_distance <= attackDist)

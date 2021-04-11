@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerHealth : LivingEntity
 {
     public UIManager uIManager;
-    Animator _animator;
+    private Animator _animator;
 
     // Start is called before the first frame update
     void Awake()
@@ -24,6 +24,8 @@ public class PlayerHealth : LivingEntity
 
     public override void OnDamage(float damage, string tag)
     {
+        if (isDead) return;
+
         base.OnDamage(damage, tag);
         uIManager.SetHitGuage(_health);
     }
@@ -32,5 +34,6 @@ public class PlayerHealth : LivingEntity
     {
         base.Die();
         _animator.SetTrigger("Die");
+        GameManager.instance.GameOver();
     }
 }

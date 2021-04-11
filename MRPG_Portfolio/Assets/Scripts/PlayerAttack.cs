@@ -26,14 +26,18 @@ public class PlayerAttack : MonoBehaviour
     {
         isAttacking = true;
 
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitForSeconds(0.3f);
 
+        Debug.Log("AttackEvent");
+        TrailOn();
         AttackEvent();
 
         while(_animator.GetCurrentAnimatorStateInfo(0).IsName("Player_Attack"))
         {
+            Debug.Log("In Animation");
             yield return null;
         }
+        TrailOff();
 
         //공격이 끝나고, 콤보가 입력됐다면 콤보 애니메이션과 코루틴 실행
         if(comboPossible)
@@ -52,12 +56,16 @@ public class PlayerAttack : MonoBehaviour
     {
         _playerMov.canMove = false;
 
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(0.3f);
         AttackEvent();
-        Debug.Log("ComboAttack!");
+        TrailOn();
 
-        yield return new WaitForSeconds(0.5f);
-        //후 딜레이
+        while (_animator.GetCurrentAnimatorStateInfo(0).IsName("Player_Combo"))
+        {
+            Debug.Log("In Animation");
+            yield return null;
+        }
+        TrailOff();
 
         isAttacking = false;
         comboPossible = false;
@@ -71,6 +79,9 @@ public class PlayerAttack : MonoBehaviour
 
         foreach (Collider coll in colls)
         {
+            GameObject hitEffect = ObjectPool.instance.CallObj("HitEffect");
+            hitEffect.transform.position = coll.transform.position + new Vector3(0,1f,0);
+            hitEffect.GetComponent<ParticleSystem>().Play();
             coll.GetComponent<LivingEntity>().OnDamage(attackDamage, "Monster");
         }
     }
