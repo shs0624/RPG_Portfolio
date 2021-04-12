@@ -200,13 +200,11 @@ public class BossSkeleton : LivingEntity
 
         if (_distance > attackDistance - 0.5f)
         {
-            Debug.Log("Chase");
             _animator.SetBool("isMoving", true);
             _nav.SetDestination(_target.position);
         }
         else
         {
-            Debug.Log("Stop");
             _animator.SetBool("isMoving", false);
             _nav.SetDestination(transform.position);
         }
@@ -290,7 +288,6 @@ public class BossSkeleton : LivingEntity
     //4. 소환이 끝나고, 일정시간 Idle을 유치하고 Chase 상태로 변경.
     IEnumerator SummonCoroutine()
     {
-        Debug.Log("소환");
         isAttacking = true;
 
         _animator.SetTrigger("Summon");
@@ -358,9 +355,7 @@ public class BossSkeleton : LivingEntity
         _animator.SetTrigger("SmashJump");
         StartCoroutine(SmashMoveUpdate(_target.position,1.5f));
 
-        yield return new WaitForSeconds(1.5f);
-
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(3f);
 
         attackTimer = 0f;
         attackCount = 0;
@@ -402,7 +397,6 @@ public class BossSkeleton : LivingEntity
 
         //_targetPos의 범위 내부 적에게 데미지 주기.
         pos = _targetPos;
-        //transform.localPosition = pos;
     }
 
     IEnumerator AttackCoroutine()

@@ -19,7 +19,7 @@ public class ParticleDeactive : MonoBehaviour
 
 		while (true && ps != null)
 		{
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(2.5f);
 			if (!ps.IsAlive(true))
 			{
 				if (OnlyDeactivate)

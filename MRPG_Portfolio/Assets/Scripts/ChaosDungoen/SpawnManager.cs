@@ -45,16 +45,11 @@ public class SpawnManager : MonoBehaviour
 
         _guage += _get;
         chaosUI.SetChaosGuage(_guage);
-        if(_guage >= maxGuage)
-        {
-            //게임 클리어
-            Debug.Log("Clear!");
-        }
-        else if(_guage >= bossSpawnGuage)
+
+        if(_guage >= bossSpawnGuage)
         {
             isSpawning = false;
             SpawnBoss();
-            //보스 스폰
         }
     }
 

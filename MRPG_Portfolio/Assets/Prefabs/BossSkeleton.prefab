@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1442801627}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.294, y: 0.77, z: 0}
+  m_LocalPosition: {x: 1.294, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4835812519186396046}
@@ -54,7 +54,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1662115451}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.456, y: 0.77, z: 0}
+  m_LocalPosition: {x: -1.456, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4835812519186396046}
@@ -760,6 +760,8 @@ MonoBehaviour:
   SpawnLocations:
   - {fileID: 1662115452}
   - {fileID: 1442801628}
+  bossHitBar: {fileID: 0}
+  bossHitText: {fileID: 0}
   _state: 0
 --- !u!195 &1404410053266814
 NavMeshAgent:
